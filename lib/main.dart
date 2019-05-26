@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -12,22 +13,28 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  //controller dos TextFields - peso e altura
   TextEditingController weightController = TextEditingController();
   TextEditingController heightController = TextEditingController();
 
+  //key do formulário
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  //texto abaixo do botão de calcular
   String _infoText = 'Informe seu dados!';
 
+  //limpa os TextFields, reseta a mensagem de info e a chave do form
   void _resetFields() {
     weightController.text = '';
     heightController.text = '';
 
     setState(() {
       _infoText = 'Informe seu dados!';
+      _formKey = GlobalKey<FormState>();
     });
   }
 
+  //calcula o imc
   void _calculate() {
     setState(() {
       double weight = double.parse(weightController.text);
@@ -35,6 +42,7 @@ class _HomeState extends State<Home> {
 
       double imc = weight / (height * height);
 
+      //atualiza a mensagem do resultado
       if (imc < 18.6) {
         _infoText = "Abaixo do Peso (${imc.toStringAsPrecision(4)})";
       } else if (imc >= 18.6 && imc < 24.9) {
@@ -59,6 +67,7 @@ class _HomeState extends State<Home> {
           title: Text('Calculadora de IMC'),
           centerTitle: true,
           backgroundColor: Colors.teal,
+          //botão de reset
           actions: <Widget>[
             IconButton(
               onPressed: _resetFields,
@@ -75,12 +84,16 @@ class _HomeState extends State<Home> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                //icone principal
                 Icon(
                   Icons.person,
                   size: 120.0,
                   color: Colors.teal,
                 ),
+                //TextFormField de peso
                 TextFormField(
+                  //permite apenas números
+                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Peso (kg)',
@@ -92,13 +105,17 @@ class _HomeState extends State<Home> {
                     fontSize: 25.0,
                   ),
                   controller: weightController,
+                  //valida se o campo foi preenchido
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Insira seu peso!';
                     }
                   },
                 ),
+                //TextFormField de altura
                 TextFormField(
+                  //permite apenas números
+                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Altura (cm)',
@@ -110,17 +127,20 @@ class _HomeState extends State<Home> {
                     fontSize: 25.0,
                   ),
                   controller: heightController,
+                  //valida se o campo foi preenchido
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Insira sua altura!';
                     }
                   },
                 ),
+                //botão de calcular com padding
                 Padding(
                   padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                   child: Container(
                     height: 50.0,
                     child: RaisedButton(
+                      //verifica se o form foi valido e calcula o imc
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           _calculate();
@@ -137,6 +157,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
+                //texto de info
                 Text(
                   _infoText,
                   textAlign: TextAlign.center,
