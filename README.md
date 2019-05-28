@@ -5,4 +5,4 @@ Link do curso na Udemy: https://www.udemy.com/curso-completo-flutter-app-android
 
 <br/>
 
-<img src="screenshot.png" width="250" title="hover text">
+<img src="screenshot.png" width="250" title="Screenshot">
